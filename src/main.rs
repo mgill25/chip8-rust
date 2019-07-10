@@ -30,5 +30,5 @@ impl Machine {
 }
 
 fn main() {
-    let mut vm = Machine::new("Chip8");
+    let vm = Machine::new("Chip8");
 }
