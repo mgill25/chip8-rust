@@ -1,5 +1,5 @@
-struct Machine<'a> {
-    name: &'a str,
+struct Machine {
+    name: String,
     counter: u16,
     stack_ptr: u8,
     mem: [u8; 4096],
@@ -15,7 +15,7 @@ fn main() {
     let mut stack: [u16; 16] = [0; 16];
     let mut registers: [u8; 16] = [0; 16];
     let chip8 = Machine {
-        name: "Chip8",
+        name: String::from("Chip8"),
         counter: 0,
         stack_ptr: 0,
         mem,
@@ -27,4 +27,3 @@ fn main() {
     };
     println!("Hello, {}", chip8.name);
 }
-
