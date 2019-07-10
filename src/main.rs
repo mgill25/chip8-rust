@@ -1,7 +1,6 @@
 use std::fs::File;
 use std::io::Read;
 
-#[derive(Debug)]
 struct Machine {
     name: String,
     counter: u16,
@@ -35,8 +34,8 @@ impl Machine {
         let filename = "/Users/manishwingify/Personaldev/Rust/chip8/roms/pong.rom";
         let mut file = File::open(filename).expect("ROM not found");
 
-        let bufsize = 4096 - 512;
-        let mut buffer: [u8; bufsize] = [0; bufsize];
+        const BUFSIZE : usize = 4096 - 512;
+        let mut buffer: [u8; BUFSIZE] = [0; BUFSIZE];
 
         // load the ROM into the buffer
         file.read(&mut buffer);
