@@ -15,7 +15,7 @@ struct Machine {
 
 impl Machine {
     fn new(name: &str) -> Self {
-        let chip8 = Machine {
+        Machine {
             name: name.to_string(),
             counter: 0,
             stack_ptr: 0,
@@ -25,8 +25,7 @@ impl Machine {
             i: 0,
             delay_register: 0,
             sound_register: 0,
-        };
-        chip8
+        }
     }
 
     fn copy_rom(&mut self) -> [u8;4096] {
@@ -43,7 +42,7 @@ impl Machine {
         // Copy the buffer into the VM memory
         // TODO: Why not copy directly without the intermediate buffer
         self.mem[512..].clone_from_slice(&buffer);
-        return self.mem;
+        self.mem
     }
 }
 
