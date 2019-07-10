@@ -11,8 +11,7 @@ struct Machine {
 }
 
 impl Machine {
-
-    fn new(name: &str) -> Machine {
+    fn new(name: &str) -> Self {
         let chip8 = Machine {
             name: name.to_string(),
             counter: 0,
@@ -24,7 +23,7 @@ impl Machine {
             delay_register: 0,
             sound_register: 0,
         };
-        return chip8;
+        chip8
     }
 
 }
