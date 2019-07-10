@@ -1,3 +1,7 @@
+use std::fs::File;
+use std::io::Read;
+
+#[derive(Debug)]
 struct Machine {
     name: String,
     counter: u16,
@@ -30,6 +34,22 @@ impl Machine {
         return chip8;
     }
 
+    fn copy_rom(&mut self) -> [u8;4096] {
+        // TODO: Read the filename from program arguments
+        let filename = "/Users/manishwingify/Personaldev/Rust/chip8/roms/pong.rom";
+        let mut file = File::open(filename).expect("ROM not found");
+
+        let bufsize = 4096 - 512;
+        let mut buffer: [u8; bufsize] = [0; bufsize];
+
+        // load the ROM into the buffer
+        file.read(&mut buffer);
+
+        // Copy the buffer into the VM memory
+        // TODO: Why not copy directly without the intermediate buffer
+        self.mem[512..].clone_from_slice(&buffer);
+        return self.mem;
+    }
 }
 
 fn main() {
