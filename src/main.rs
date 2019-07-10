@@ -13,19 +13,16 @@ struct Machine {
 impl Machine {
 
     fn new(name: &str) -> Machine {
-        let mem = [0; 4096];
-        let stack = [0; 16];
-        let registers = [0; 16];
         let chip8 = Machine {
-            name: String::from("Chip8"),
+            name: name.to_string(),
             counter: 0,
             stack_ptr: 0,
-            mem,
-            stack,
-            v: registers,
+            mem: [0; 4096],
+            stack: [0; 16],
+            v: [0; 16],
             i: 0,
             delay_register: 0,
-            sound_register: 0
+            sound_register: 0,
         };
         return chip8;
     }
