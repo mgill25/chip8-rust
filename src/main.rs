@@ -42,7 +42,7 @@ impl Machine {
         let mut buffer: [u8; BUFSIZE] = [0; BUFSIZE];
 
         // load the ROM into the buffer
-        file.read(&mut buffer);
+        file.read(&mut buffer).expect("Error reading from File");
 
         // Copy the buffer into the VM memory
         // TODO: Why not copy directly without the intermediate buffer
