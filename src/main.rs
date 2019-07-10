@@ -11,9 +11,9 @@ struct Machine {
 }
 
 fn main() {
-    let mut mem: [u8; 4096] = [0; 4096];
-    let mut stack: [u16; 16] = [0; 16];
-    let mut registers: [u8; 16] = [0; 16];
+    let mem: [u8; 4096] = [0; 4096];
+    let stack: [u16; 16] = [0; 16];
+    let registers: [u8; 16] = [0; 16];
     let chip8 = Machine {
         name: String::from("Chip8"),
         counter: 0,
