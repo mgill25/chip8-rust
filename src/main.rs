@@ -1,5 +1,6 @@
 use std::fs::File;
 use std::io::Read;
+use std::env;
 
 const MEMORY_SIZE: usize = 4096;
 const STACK_SIZE: usize = 16;
@@ -19,8 +20,8 @@ struct Machine {
 }
 
 impl Machine {
-    fn new(name: &str) -> Self {
-        Machine {
+    fn new(name: &str, rom_file: &str) -> Self {
+        let mut m = Machine {
             name: name.to_string(),
             counter: 0,
             stack_ptr: 0,
@@ -30,12 +31,12 @@ impl Machine {
             i: 0,
             delay_register: 0,
             sound_register: 0,
-        }
+        };
+        m.load_rom(rom_file).expect("Error loading ROM file");
+        m
     }
 
-    fn copy_rom(&mut self) -> [u8; MEMORY_SIZE] {
-        // TODO: Read the filename from program arguments
-        let filename = "/Users/manishwingify/Personaldev/Rust/chip8/roms/pong.rom";
+    fn load_rom(&mut self, filename: &str) -> Result<(), String> {
         let mut file = File::open(filename).expect("ROM not found");
 
         const BUFSIZE: usize = MEMORY_SIZE - PROGRAM_OFFSET;
@@ -47,10 +48,11 @@ impl Machine {
         // Copy the buffer into the VM memory
         // TODO: Why not copy directly without the intermediate buffer
         self.mem[PROGRAM_OFFSET..].clone_from_slice(&buffer);
-        self.mem
+        Ok(())
     }
 }
 
 fn main() {
-    let vm = Machine::new("Chip8");
+    let rom_file = env::args().nth(1).expect("Please input a ROM file");
+    let vm = Machine::new("Chip8", &rom_file);
 }
