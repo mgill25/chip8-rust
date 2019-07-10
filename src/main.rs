@@ -10,20 +10,28 @@ struct Machine {
     sound_register: u8,
 }
 
+impl Machine {
+
+    fn new(name: &str) -> Machine {
+        let mem = [0; 4096];
+        let stack = [0; 16];
+        let registers = [0; 16];
+        let chip8 = Machine {
+            name: String::from("Chip8"),
+            counter: 0,
+            stack_ptr: 0,
+            mem,
+            stack,
+            v: registers,
+            i: 0,
+            delay_register: 0,
+            sound_register: 0
+        };
+        return chip8;
+    }
+
+}
+
 fn main() {
-    let mem = [0; 4096];
-    let stack = [0; 16];
-    let registers = [0; 16];
-    let chip8 = Machine {
-        name: String::from("Chip8"),
-        counter: 0,
-        stack_ptr: 0,
-        mem,
-        stack,
-        v: registers,
-        i: 0,
-        delay_register: 0,
-        sound_register: 0
-    };
-    println!("Hello, {}", chip8.name);
+    let mut vm = Machine::new("Chip8");
 }
