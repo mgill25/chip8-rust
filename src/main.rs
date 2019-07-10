@@ -1,5 +1,7 @@
 mod core;
 
 fn main() {
-    let vm = core::Machine::new("Chip8");
+    let mut vm = core::Machine::new("Chip8");
+    vm.copy_rom();
+    vm.dump_memory();
 }

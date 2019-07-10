@@ -33,7 +33,7 @@ impl Machine {
         }
     }
 
-    fn copy_rom(&mut self) -> [u8; MEMORY_SIZE] {
+    pub fn copy_rom(&mut self) -> [u8; MEMORY_SIZE] {
         // TODO: Read the filename from program arguments
         let filename = "/Users/manishwingify/Personaldev/Rust/chip8/roms/pong.rom";
         let mut file = File::open(filename).expect("ROM not found");
@@ -48,5 +48,14 @@ impl Machine {
         // TODO: Why not copy directly without the intermediate buffer
         self.mem[PROGRAM_OFFSET..].clone_from_slice(&buffer);
         self.mem
+    }
+
+    pub fn dump_memory(&mut self) {
+        let zero: u8 = 0;
+        for byte in self.mem.iter() {
+            if *byte != zero {
+                println!("{}", byte);
+            }
+        }
     }
 }
