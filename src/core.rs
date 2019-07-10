@@ -19,7 +19,7 @@ pub struct Machine {
 }
 
 impl Machine {
-    fn new(name: &str, rom_file: &str) -> Self {
+    pub fn new(name: &str, rom_file: &str) -> Self {
         let mut m = Machine {
             name: name.to_string(),
             counter: 0,
@@ -42,7 +42,7 @@ impl Machine {
         let mut buffer: [u8; BUFSIZE] = [0; BUFSIZE];
 
         // load the ROM into the buffer
-        file.read(&mut buffer).expect("Error reading from File");
+        let _ = file.read(&mut buffer).expect("Error reading from File");
 
         // Copy the buffer into the VM memory
         // TODO: Why not copy directly without the intermediate buffer
