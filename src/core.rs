@@ -43,7 +43,7 @@ impl fmt::Debug for Machine {
 }
 
 impl Machine {
-    pub fn new(name: &str, rom_file: &str) -> Self {
+    pub fn new(name: &str, rom_file: &mut File) -> Self {
         let mut m = Machine {
             name: name.to_string(),
             counter: 0,
@@ -59,9 +59,7 @@ impl Machine {
         m
     }
 
-    fn load_rom(&mut self, filename: &str) -> Result<(), String> {
-        let mut file = File::open(filename).expect("ROM not found");
-
+    fn load_rom(&mut self, file: &mut File) -> Result<(), String> {
         const BUFSIZE: usize = MEMORY_SIZE - PROGRAM_OFFSET;
         let mut buffer: [u8; BUFSIZE] = [0; BUFSIZE];
 
@@ -72,5 +70,17 @@ impl Machine {
         // TODO: Why not copy directly without the intermediate buffer
         self.mem.mem[PROGRAM_OFFSET..].clone_from_slice(&buffer);
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_load_into_mem() {
+        let mut tmpfile = tempfile::tempfile().unwrap();
+        let vm = Machine::new("TestVM", &mut tmpfile);
+        assert_eq!(1 + 1, 2);
     }
 }
