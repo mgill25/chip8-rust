@@ -1,5 +1,5 @@
 use std::fs::File;
-use std::io::Read;
+use std::io::{Write, Read, Seek, SeekFrom};
 use std::fmt;
 
 const MEMORY_SIZE: usize = 4096;
@@ -43,7 +43,7 @@ impl fmt::Debug for Machine {
 }
 
 impl Machine {
-    pub fn new(name: &str, rom_file: &mut File) -> Self {
+    pub fn new(name: &str) -> Self {
         let mut m = Machine {
             name: name.to_string(),
             counter: 0,
@@ -55,11 +55,20 @@ impl Machine {
             delay_register: 0,
             sound_register: 0,
         };
-        m.load_rom(rom_file).expect("Error loading ROM file");
         m
     }
 
-    fn load_rom(&mut self, file: &mut File) -> Result<(), String> {
+    pub fn load_rom(&mut self, filename: &str) -> Result<(), String> {
+        let mut file = self._open_rom_file(filename);
+        self._copy_into_mem(&mut file)
+    }
+
+    fn _open_rom_file(&mut self, rom_file: &str) -> File {
+        let mut file = File::open(rom_file).expect("ROM not found");
+        file
+    }
+
+    fn _copy_into_mem(&mut self, file: &mut File) -> Result<(), String> {
         const BUFSIZE: usize = MEMORY_SIZE - PROGRAM_OFFSET;
         let mut buffer: [u8; BUFSIZE] = [0; BUFSIZE];
 
@@ -78,9 +87,29 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_load_into_mem() {
+    fn test_copy_into_mem() {
         let mut tmpfile = tempfile::tempfile().unwrap();
-        let vm = Machine::new("TestVM", &mut tmpfile);
-        assert_eq!(1 + 1, 2);
+        let mut vm = Machine::new("TestVM");
+        vm._copy_into_mem(&mut tmpfile);
+        assert_eq!(vm.mem.mem.len(), 4096);
+        // every byte in memory is zero when file is empty
+        for byte in vm.mem.mem.iter() {
+            assert_eq!(*byte, 0);
+        }
+    }
+
+    #[test]
+    fn test_copy_into_mem_some_data() {
+        let mut tmpfile = tempfile::tempfile().unwrap();
+        let mut vm = Machine::new("TestVM");
+        write!(tmpfile, "Hello World!").unwrap();        // Write
+        tmpfile.seek(SeekFrom::Start(0)).unwrap();  // Seek to start
+        vm._copy_into_mem(&mut tmpfile);
+        let expected = [72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33];
+        let mut count = 0;
+        for i in 0..expected.len() {
+            assert_eq!(vm.mem.mem[PROGRAM_OFFSET + count], expected[count]);
+            count += 1;
+        }
     }
 }
