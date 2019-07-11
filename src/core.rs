@@ -87,7 +87,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_copy_into_mem() {
+    fn test_copy_into_mem_no_data() {
         let mut tmpfile = tempfile::tempfile().unwrap();
         let mut vm = Machine::new("TestVM");
         vm._copy_into_mem(&mut tmpfile);
