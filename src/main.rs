@@ -2,7 +2,6 @@
 extern crate env_logger;
 
 use std::env;
-use std::fs::File;
 
 mod core;
 

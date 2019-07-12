@@ -1,5 +1,5 @@
 use std::fs::File;
-use std::io::{Write, Read, Seek, SeekFrom};
+use std::io::Read;
 use std::fmt;
 
 const MEMORY_SIZE: usize = 4096;
