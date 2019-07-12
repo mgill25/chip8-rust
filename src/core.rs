@@ -14,10 +14,10 @@ struct Memory {
 impl fmt::Debug for Memory {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         const ZERO: u8 = 0;
-        write!(f, "{{ ");
+        write!(f, "{{ ")?;
         for (index, byte) in self.mem.iter().enumerate() {
             if *byte != ZERO {
-                write!(f, "{}: {}, ", index, byte);
+                write!(f, "{}: {}, ", index, byte)?;
             }
         };
         write!(f, "}}")
