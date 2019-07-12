@@ -6,10 +6,12 @@ use std::fs::File;
 
 mod core;
 
-fn main() {
+
+fn main() -> Result<(), String> {
     env_logger::init();
     let rom_file = env::args().nth(1).expect("Please input a ROM file");
     let mut vm = core::Machine::new("Chip8");
-    vm.load_rom(&rom_file);
+    vm.load_rom(&rom_file)?;
     debug!("{:#?}", vm);
+    Ok(())
 }
