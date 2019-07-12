@@ -58,22 +58,17 @@ impl Machine {
         m
     }
 
-    pub fn load_rom(&mut self, filename: &str) -> Result<(), String> {
-        let mut file = self._open_rom_file(filename);
+    pub fn load_rom(&mut self, filename: &str) -> Result<(), std::io::Error> {
+        let mut file = File::open(filename)?;
         self._copy_into_mem(&mut file)
     }
 
-    fn _open_rom_file(&mut self, rom_file: &str) -> File {
-        let mut file = File::open(rom_file).expect("ROM not found");
-        file
-    }
-
-    fn _copy_into_mem(&mut self, file: &mut File) -> Result<(), String> {
+    fn _copy_into_mem(&mut self, file: &mut File) -> Result<(), std::io::Error> {
         const BUFSIZE: usize = MEMORY_SIZE - PROGRAM_OFFSET;
         let mut buffer: [u8; BUFSIZE] = [0; BUFSIZE];
 
         // load the ROM into the buffer
-        let _ = file.read(&mut buffer).expect("Error reading from File");
+        let _ = file.read(&mut buffer)?;
 
         // Copy the buffer into the VM memory
         // TODO: Why not copy directly without the intermediate buffer

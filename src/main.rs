@@ -6,11 +6,10 @@ use std::env;
 mod core;
 
 
-fn main() -> Result<(), String> {
+fn main() {
     env_logger::init();
     let rom_file = env::args().nth(1).expect("Please input a ROM file");
     let mut vm = core::Machine::new("Chip8");
-    vm.load_rom(&rom_file)?;
+    vm.load_rom(&rom_file).expect("Unable to load ROM from file");
     debug!("{:#?}", vm);
-    Ok(())
 }
