@@ -77,6 +77,7 @@ impl Machine {
 }
 
 #[cfg(test)]
+use std::io::{Write, Seek, SeekFrom};
 mod tests {
     use super::*;
 
@@ -84,7 +85,7 @@ mod tests {
     fn test_copy_into_mem_no_data() {
         let mut tmpfile = tempfile::tempfile().unwrap();
         let mut vm = Machine::new("TestVM");
-        vm._copy_into_mem(&mut tmpfile);
+        vm._copy_into_mem(&mut tmpfile).unwrap();
         assert_eq!(vm.mem.mem.len(), 4096);
         // every byte in memory is zero when file is empty
         for byte in vm.mem.mem.iter() {
@@ -98,10 +99,10 @@ mod tests {
         let mut vm = Machine::new("TestVM");
         write!(tmpfile, "Hello World!").unwrap();        // Write
         tmpfile.seek(SeekFrom::Start(0)).unwrap();  // Seek to start
-        vm._copy_into_mem(&mut tmpfile);
+        vm._copy_into_mem(&mut tmpfile).unwrap();
         let expected = [72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33];
         let mut count = 0;
-        for i in 0..expected.len() {
+        for _ in 0..expected.len() {
             assert_eq!(vm.mem.mem[PROGRAM_OFFSET + count], expected[count]);
             count += 1;
         }
