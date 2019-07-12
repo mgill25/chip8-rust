@@ -44,7 +44,7 @@ impl fmt::Debug for Machine {
 
 impl Machine {
     pub fn new(name: &str) -> Self {
-        let mut m = Machine {
+        Machine {
             name: name.to_string(),
             counter: 0,
             stack_ptr: 0,
@@ -54,8 +54,7 @@ impl Machine {
             i: 0,
             delay_register: 0,
             sound_register: 0,
-        };
-        m
+        }
     }
 
     pub fn load_rom(&mut self, filename: &str) -> Result<(), std::io::Error> {
