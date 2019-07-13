@@ -84,17 +84,15 @@ impl Machine {
             if self.counter > 4095 {
                 panic!("Program Counter Out of bounds!");
             }
-            let (fb, sb) = (
-                self.mem.mem[self.counter as usize],
-                self.mem.mem[(self.counter + 1) as usize],
-            );
-            let opcode = self.create_opcode(fb, sb);
+            let opcode = {
+                let pc: usize = usize::from(self.counter);
+                Machine::get_opcode(&self.mem.mem[pc..=pc+1])
+            };
             if opcode != 0 {
-                println!("Got a real opcode = {}", opcode);
+                trace!("Got a real opcode = {}", opcode);
             }
             self.counter += 2;
         }
-        Ok(())
     }
 
     /**
@@ -105,11 +103,11 @@ impl Machine {
     * THEN bitwise-OR to concatenate them:
     *   (XXXXXXXX00000000 | YYYYYYYY) = XXXXXXXXYYYYYYYY
     **/
-    fn create_opcode(&mut self, fb: u8, sb: u8) -> u16 {
-        let mut fb_u16 = u16::from(fb);
-        let sb_u16 = u16::from(sb);
-        fb_u16 <<= 8;
-        fb_u16 | sb_u16
+    fn get_opcode(b: &[u8]) -> u16 {
+        let mut fb = u16::from(b[0]);
+        let sb = u16::from(b[1]);
+        fb <<= 8;
+        fb | sb
     }
 }
 
