@@ -5,6 +5,7 @@ extern crate env_logger;
 use std::env;
 
 mod core;
+mod opcodes;
 
 fn main() {
     env_logger::init();

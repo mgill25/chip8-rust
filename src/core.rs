@@ -2,6 +2,8 @@ use std::fmt;
 use std::fs::File;
 use std::io::Read;
 
+use crate::opcodes::Instruction;
+
 const MEMORY_SIZE: usize = 4096;
 const STACK_SIZE: usize = 16;
 const REGISTER_COUNT: usize = 16;
