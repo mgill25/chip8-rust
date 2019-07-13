@@ -4,9 +4,11 @@ extern crate env_logger;
 
 use std::env;
 
+mod bitmasks;
 mod core;
 mod opcodes;
 mod opcodesv2;
+mod ophandlers;
 
 fn main() {
     env_logger::init();

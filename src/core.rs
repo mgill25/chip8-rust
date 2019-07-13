@@ -96,11 +96,10 @@ impl Machine {
                 trace!("PC: {}, opcode = {:X}", self.counter, opcode);
             }
             let instruction = InstructionV2::try_from(opcode).expect("Could not parse opcode");
-            //            let instruction = Instruction::try_from(opcode).expect("Could not parse opcode");
-            //            trace!("Instruction: {:X?}", instruction);
-            //            if let Instruction::Return = instruction {
-            //                return Ok(());
-            //            };
+            trace!("Instruction: {:X?}", instruction);
+            if let InstructionV2::Return = instruction {
+                return Ok(());
+            };
             self.counter += 2;
         }
     }
