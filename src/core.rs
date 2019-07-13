@@ -4,6 +4,7 @@ use std::fs::File;
 use std::io::Read;
 
 use crate::opcodes::Instruction;
+use crate::opcodesv2::InstructionV2;
 
 const MEMORY_SIZE: usize = 4096;
 const STACK_SIZE: usize = 16;
@@ -94,11 +95,12 @@ impl Machine {
             if opcode != 0 {
                 trace!("PC: {}, opcode = {:X}", self.counter, opcode);
             }
-            let instruction = Instruction::try_from(opcode).expect("Could not parse opcode");
-            trace!("Instruction: {:X?}", instruction);
-            if let Instruction::Return = instruction {
-                return Ok(());
-            };
+            let instruction = InstructionV2::try_from(opcode).expect("Could not parse opcode");
+            //            let instruction = Instruction::try_from(opcode).expect("Could not parse opcode");
+            //            trace!("Instruction: {:X?}", instruction);
+            //            if let Instruction::Return = instruction {
+            //                return Ok(());
+            //            };
             self.counter += 2;
         }
     }

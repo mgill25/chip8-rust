@@ -6,6 +6,7 @@ use std::env;
 
 mod core;
 mod opcodes;
+mod opcodesv2;
 
 fn main() {
     env_logger::init();
