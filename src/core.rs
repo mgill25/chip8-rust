@@ -44,7 +44,7 @@ impl fmt::Debug for Machine {
 
 impl Machine {
     pub fn new(name: &str) -> Self {
-        Machine {
+        Self {
             name: name.to_string(),
             counter: 0,
             stack_ptr: 0,
