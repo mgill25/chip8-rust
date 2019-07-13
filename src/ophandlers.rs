@@ -2,11 +2,6 @@ use crate::bitmasks::*;
 use crate::opcodesv2::InstructionV2;
 
 #[allow(non_snake_case)]
-pub fn handle0x0NNN(opcode: u16) -> InstructionV2 {
-    InstructionV2::SYS
-}
-
-#[allow(non_snake_case)]
 pub fn handle0x00E0(opcode: u16) -> InstructionV2 {
     InstructionV2::ClearScreen
 }
@@ -14,6 +9,11 @@ pub fn handle0x00E0(opcode: u16) -> InstructionV2 {
 #[allow(non_snake_case)]
 pub fn handle0x00EE(opcode: u16) -> InstructionV2 {
     InstructionV2::Return
+}
+
+#[allow(non_snake_case)]
+pub fn handle0x0NNN(opcode: u16) -> InstructionV2 {
+    InstructionV2::SYS
 }
 
 #[allow(non_snake_case)]

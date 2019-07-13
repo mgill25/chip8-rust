@@ -53,11 +53,6 @@ pub struct OpcodeTableEntry {
 fn initialize_opcode_table() -> [OpcodeTableEntry; 35] {
     const OPCODE_TABLE: [OpcodeTableEntry; 35] = [
         OpcodeTableEntry {
-            opcode: 0x0000,
-            mask: 0xF000,
-            handler: ophandlers::handle0x0NNN,
-        }, // 0x0NNN
-        OpcodeTableEntry {
             opcode: 0x00E0,
             mask: 0xFFFF,
             handler: ophandlers::handle0x00E0,
@@ -67,6 +62,11 @@ fn initialize_opcode_table() -> [OpcodeTableEntry; 35] {
             mask: 0xFFFF,
             handler: ophandlers::handle0x00EE,
         }, // 0x00EE
+        OpcodeTableEntry {
+            opcode: 0x0000,
+            mask: 0xF000,
+            handler: ophandlers::handle0x0NNN,
+        }, // 0x0NNN
         OpcodeTableEntry {
             opcode: 0x1000,
             mask: 0xF000,
@@ -238,7 +238,7 @@ impl TryFrom<u16> for InstructionV2 {
         let mut ins: InstructionV2;
         for opcode_entry in opcode_table.iter() {
             if opcode != 0 && (opcode & opcode_entry.mask == opcode_entry.opcode) {
-                trace!("Got a valid opcode: {:X}", opcode);
+                // debug!("input opcode = {:X}, mask = {:X}, actual code: {:X}", opcode, opcode_entry.mask, opcode_entry.opcode);
                 ins = (opcode_entry.handler)(opcode);
                 return Ok(ins);
             }
