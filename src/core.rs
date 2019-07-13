@@ -1,5 +1,5 @@
 use std::fs::File;
-use std::io::{Write, Read, Seek, SeekFrom};
+use std::io::Read;
 use std::fmt;
 
 const MEMORY_SIZE: usize = 4096;
@@ -44,7 +44,7 @@ impl fmt::Debug for Machine {
 
 impl Machine {
     pub fn new(name: &str) -> Self {
-        let mut m = Machine {
+        Machine {
             name: name.to_string(),
             counter: 0,
             stack_ptr: 0,
@@ -54,26 +54,20 @@ impl Machine {
             i: 0,
             delay_register: 0,
             sound_register: 0,
-        };
-        m
+        }
     }
 
-    pub fn load_rom(&mut self, filename: &str) -> Result<(), String> {
-        let mut file = self._open_rom_file(filename);
+    pub fn load_rom(&mut self, filename: &str) -> Result<(), std::io::Error> {
+        let mut file = File::open(filename)?;
         self._copy_into_mem(&mut file)
     }
 
-    fn _open_rom_file(&mut self, rom_file: &str) -> File {
-        let mut file = File::open(rom_file).expect("ROM not found");
-        file
-    }
-
-    fn _copy_into_mem(&mut self, file: &mut File) -> Result<(), String> {
+    fn _copy_into_mem(&mut self, file: &mut File) -> Result<(), std::io::Error> {
         const BUFSIZE: usize = MEMORY_SIZE - PROGRAM_OFFSET;
         let mut buffer: [u8; BUFSIZE] = [0; BUFSIZE];
 
         // load the ROM into the buffer
-        let _ = file.read(&mut buffer).expect("Error reading from File");
+        let _ = file.read(&mut buffer)?;
 
         // Copy the buffer into the VM memory
         // TODO: Why not copy directly without the intermediate buffer
@@ -83,6 +77,7 @@ impl Machine {
 }
 
 #[cfg(test)]
+use std::io::{Write, Seek, SeekFrom};
 mod tests {
     use super::*;
 
@@ -90,7 +85,7 @@ mod tests {
     fn test_copy_into_mem_no_data() {
         let mut tmpfile = tempfile::tempfile().unwrap();
         let mut vm = Machine::new("TestVM");
-        vm._copy_into_mem(&mut tmpfile);
+        vm._copy_into_mem(&mut tmpfile).unwrap();
         assert_eq!(vm.mem.mem.len(), 4096);
         // every byte in memory is zero when file is empty
         for byte in vm.mem.mem.iter() {
@@ -104,10 +99,10 @@ mod tests {
         let mut vm = Machine::new("TestVM");
         write!(tmpfile, "Hello World!").unwrap();        // Write
         tmpfile.seek(SeekFrom::Start(0)).unwrap();  // Seek to start
-        vm._copy_into_mem(&mut tmpfile);
+        vm._copy_into_mem(&mut tmpfile).unwrap();
         let expected = [72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33];
         let mut count = 0;
-        for i in 0..expected.len() {
+        for _ in 0..expected.len() {
             assert_eq!(vm.mem.mem[PROGRAM_OFFSET + count], expected[count]);
             count += 1;
         }
