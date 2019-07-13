@@ -89,7 +89,7 @@ impl Machine {
             }
             let opcode = {
                 let pc: usize = usize::from(self.counter);
-                Machine::get_opcode(&self.mem.mem[pc..=pc + 1])
+                Self::get_opcode(&self.mem.mem[pc..=pc + 1])
             };
             if opcode != 0 {
                 trace!("PC: {}, opcode = {:X}", self.counter, opcode);
