@@ -98,9 +98,9 @@ impl Machine {
     * Create a 16-bit opcode out of 2 bytes
     * Ref: https://stackoverflow.com/a/50244328
     * Shift the bits by 8 to the left:
-        (XXXXXXXX becomes 00000000XXXXXXXX)
+        (XXXXXXXX becomes XXXXXXXX00000000)
     * THEN bitwise-OR to concatenate them:
-    *   (00000000XXXXXXXX | YYYYYYYY) = XXXXXXXXYYYYYYYY
+    *   (XXXXXXXX00000000 | YYYYYYYY) = XXXXXXXXYYYYYYYY
     **/
     fn create_opcode(&mut self, fb: u8, sb: u8) -> u16 {
         let mut fb_u16 = u16::from(fb);
@@ -113,6 +113,7 @@ impl Machine {
 #[cfg(test)]
 use std::io::{Seek, SeekFrom, Write};
 mod tests {
+    use super::*;
 
     #[test]
     fn test_copy_into_mem_no_data() {
