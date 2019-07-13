@@ -86,7 +86,7 @@ impl Machine {
             }
             let opcode = {
                 let pc: usize = usize::from(self.counter);
-                Machine::get_opcode(&self.mem.mem[pc..=pc+1])
+                Machine::get_opcode(&self.mem.mem[pc..=pc + 1])
             };
             if opcode != 0 {
                 trace!("Got a real opcode = {:X}", opcode);
@@ -145,13 +145,12 @@ mod tests {
 
     #[test]
     fn test_create_opcode() {
-        let mut vm = Machine::new("TestVM");
-        assert_eq!(vm.create_opcode(0x31, 0x42), 0x3142);
-        assert_eq!(vm.create_opcode(0x1, 0x2), 0x0102);
-        assert_eq!(vm.create_opcode(0xAB, 0x9C), 0xAB9C);
+        assert_eq!(Machine::get_opcode(&[0x31, 0x42]), 0x3142);
+        assert_eq!(Machine::get_opcode(&[0x1, 0x2]), 0x0102);
+        assert_eq!(Machine::get_opcode(&[0xAB, 0x9C]), 0xAB9C);
 
         // doesn't magically append or prepend zeroes to the final output
-        assert_ne!(vm.create_opcode(0x1, 0x2), 0x1200);
-        assert_ne!(vm.create_opcode(0x1, 0x2), 0x0012);
+        assert_ne!(Machine::get_opcode(&[0x1, 0x2]), 0x1200);
+        assert_ne!(Machine::get_opcode(&[0x1, 0x2]), 0x0012);
     }
 }
