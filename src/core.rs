@@ -1,3 +1,4 @@
+use std::convert::TryFrom;
 use std::fmt;
 use std::fs::File;
 use std::io::Read;
@@ -48,7 +49,7 @@ impl Machine {
     pub fn new(name: &str) -> Self {
         Machine {
             name: name.to_string(),
-            counter: 0,
+            counter: 512,
             stack_ptr: 0,
             mem: Memory {
                 mem: [0; MEMORY_SIZE],
@@ -91,8 +92,13 @@ impl Machine {
                 Machine::get_opcode(&self.mem.mem[pc..=pc + 1])
             };
             if opcode != 0 {
-                trace!("Got a real opcode = {:X}", opcode);
+                trace!("PC: {}, opcode = {:X}", self.counter, opcode);
             }
+            let instruction = Instruction::try_from(opcode).expect("Could not parse opcode");
+            trace!("Instruction: {:X?}", instruction);
+            if let Instruction::Return = instruction {
+                return Ok(());
+            };
             self.counter += 2;
         }
     }
