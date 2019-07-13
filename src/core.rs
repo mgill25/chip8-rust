@@ -89,7 +89,7 @@ impl Machine {
                 Machine::get_opcode(&self.mem.mem[pc..=pc+1])
             };
             if opcode != 0 {
-                trace!("Got a real opcode = {}", opcode);
+                trace!("Got a real opcode = {:X}", opcode);
             }
             self.counter += 2;
         }
