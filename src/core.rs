@@ -1,6 +1,6 @@
+use std::fmt;
 use std::fs::File;
 use std::io::Read;
-use std::fmt;
 
 const MEMORY_SIZE: usize = 4096;
 const STACK_SIZE: usize = 16;
@@ -19,7 +19,7 @@ impl fmt::Debug for Memory {
             if *byte != ZERO {
                 write!(f, "{}: {}, ", index, byte)?;
             }
-        };
+        }
         write!(f, "}}")
     }
 }
@@ -30,8 +30,8 @@ pub struct Machine {
     stack_ptr: u8,
     mem: Memory,
     stack: [u16; STACK_SIZE],
-    v: [u8; REGISTER_COUNT],        // registers: v0 to vf
-    i: u16,                         // "There is also a 16-bit register called I."
+    v: [u8; REGISTER_COUNT], // registers: v0 to vf
+    i: u16,                  // "There is also a 16-bit register called I."
     delay_register: u8,
     sound_register: u8,
 }
@@ -48,7 +48,9 @@ impl Machine {
             name: name.to_string(),
             counter: 0,
             stack_ptr: 0,
-            mem: Memory {mem: [0; MEMORY_SIZE]},
+            mem: Memory {
+                mem: [0; MEMORY_SIZE],
+            },
             stack: [0; STACK_SIZE],
             v: [0; REGISTER_COUNT],
             i: 0,
@@ -77,7 +79,7 @@ impl Machine {
 }
 
 #[cfg(test)]
-use std::io::{Write, Seek, SeekFrom};
+use std::io::{Seek, SeekFrom, Write};
 mod tests {
     use super::*;
 
@@ -97,8 +99,8 @@ mod tests {
     fn test_copy_into_mem_some_data() {
         let mut tmpfile = tempfile::tempfile().unwrap();
         let mut vm = Machine::new("TestVM");
-        write!(tmpfile, "Hello World!").unwrap();        // Write
-        tmpfile.seek(SeekFrom::Start(0)).unwrap();  // Seek to start
+        write!(tmpfile, "Hello World!").unwrap(); // Write
+        tmpfile.seek(SeekFrom::Start(0)).unwrap(); // Seek to start
         vm._copy_into_mem(&mut tmpfile).unwrap();
         let expected = [72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33];
         let mut count = 0;
