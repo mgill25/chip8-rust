@@ -76,12 +76,43 @@ impl Machine {
         self.mem.mem[PROGRAM_OFFSET..].clone_from_slice(&buffer);
         Ok(())
     }
+
+    // Start the virtual machine: This is the fun part!
+    pub fn start(&mut self) -> Result<(), std::io::Error> {
+        loop {
+            // we check for 4095 because we need to read 2 bytes.
+            if self.counter > 4095 {
+                panic!("Program Counter Out of bounds!");
+            }
+            let (fb, sb) = (
+                self.mem.mem[self.counter as usize],
+                self.mem.mem[(self.counter + 1) as usize],
+            );
+            let opcode = self.create_opcode(fb, sb);
+            println!("Opcode = {}", opcode);
+        }
+        Ok(())
+    }
+
+    /**
+    * Create a 16-bit opcode out of 2 bytes
+    * Ref: https://stackoverflow.com/a/50244328
+    * Shift the bits by 8 to the left:
+        (XXXXXXXX becomes 00000000XXXXXXXX)
+    * THEN bitwise-OR to concatenate them:
+    *   (00000000XXXXXXXX | YYYYYYYY) = XXXXXXXXYYYYYYYY
+    **/
+    fn create_opcode(&mut self, fb: u8, sb: u8) -> u16 {
+        let mut fb_u16 = u16::from(fb);
+        let sb_u16 = u16::from(sb);
+        fb_u16 <<= 8;
+        fb_u16 | sb_u16
+    }
 }
 
 #[cfg(test)]
 use std::io::{Seek, SeekFrom, Write};
 mod tests {
-    use super::*;
 
     #[test]
     fn test_copy_into_mem_no_data() {
@@ -108,5 +139,17 @@ mod tests {
             assert_eq!(vm.mem.mem[PROGRAM_OFFSET + count], expected[count]);
             count += 1;
         }
+    }
+
+    #[test]
+    fn test_create_opcode() {
+        let mut vm = Machine::new("TestVM");
+        assert_eq!(vm.create_opcode(0x31, 0x42), 0x3142);
+        assert_eq!(vm.create_opcode(0x1, 0x2), 0x0102);
+        assert_eq!(vm.create_opcode(0xAB, 0x9C), 0xAB9C);
+
+        // doesn't magically append or prepend zeroes to the final output
+        assert_ne!(vm.create_opcode(0x1, 0x2), 0x1200);
+        assert_ne!(vm.create_opcode(0x1, 0x2), 0x0012);
     }
 }

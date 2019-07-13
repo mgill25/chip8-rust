@@ -13,4 +13,5 @@ fn main() {
     vm.load_rom(&rom_file)
         .expect("Unable to load ROM from file");
     debug!("{:#?}", vm);
+    vm.start().expect("VM Failed to Start!");
 }
