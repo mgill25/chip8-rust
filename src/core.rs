@@ -89,7 +89,10 @@ impl Machine {
                 self.mem.mem[(self.counter + 1) as usize],
             );
             let opcode = self.create_opcode(fb, sb);
-            println!("Opcode = {}", opcode);
+            if opcode != 0 {
+                println!("Got a real opcode = {}", opcode);
+            }
+            self.counter += 2;
         }
         Ok(())
     }
