@@ -243,6 +243,6 @@ impl TryFrom<u16> for InstructionV2 {
                 return Ok(ins);
             }
         }
-        Err(String::from(format!("Opcode not found: {:X}", opcode)))
+        Err(format!("Opcode not found: {:X}", opcode))
     }
 }
