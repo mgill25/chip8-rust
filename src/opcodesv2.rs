@@ -235,7 +235,7 @@ impl TryFrom<u16> for InstructionV2 {
     type Error = String;
     fn try_from(opcode: u16) -> Result<Self, String> {
         let opcode_table = initialize_opcode_table();
-        let mut ins: InstructionV2;
+        let ins: InstructionV2;
         for opcode_entry in opcode_table.iter() {
             if opcode != 0 && (opcode & opcode_entry.mask == opcode_entry.opcode) {
                 // debug!("input opcode = {:X}, mask = {:X}, actual code: {:X}", opcode, opcode_entry.mask, opcode_entry.opcode);
