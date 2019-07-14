@@ -50,193 +50,189 @@ pub struct OpcodeTableEntry {
     handler: fn(u16) -> InstructionV2,
 }
 
-fn initialize_opcode_table() -> [OpcodeTableEntry; 35] {
-    const OPCODE_TABLE: [OpcodeTableEntry; 35] = [
-        OpcodeTableEntry {
-            opcode: 0x00E0,
-            mask: 0xFFFF,
-            handler: ophandlers::handle0x00E0,
-        }, // 0x00E0
-        OpcodeTableEntry {
-            opcode: 0x00EE,
-            mask: 0xFFFF,
-            handler: ophandlers::handle0x00EE,
-        }, // 0x00EE
-        OpcodeTableEntry {
-            opcode: 0x0000,
-            mask: 0xF000,
-            handler: ophandlers::handle0x0NNN,
-        }, // 0x0NNN
-        OpcodeTableEntry {
-            opcode: 0x1000,
-            mask: 0xF000,
-            handler: ophandlers::handle0x1NNN,
-        }, // 0x1NNN
-        OpcodeTableEntry {
-            opcode: 0x2000,
-            mask: 0xF000,
-            handler: ophandlers::handle0x2NNN,
-        }, // 0x2NNN
-        OpcodeTableEntry {
-            opcode: 0x3000,
-            mask: 0xF000,
-            handler: ophandlers::handle0x3XNN,
-        }, // 0x3XNN
-        OpcodeTableEntry {
-            opcode: 0x4000,
-            mask: 0xF000,
-            handler: ophandlers::handle0x4XNN,
-        }, // 0x4XNN
-        OpcodeTableEntry {
-            opcode: 0x5000,
-            mask: 0xF00F,
-            handler: ophandlers::handle0x5XY0,
-        }, // 0x5XY0
-        OpcodeTableEntry {
-            opcode: 0x6000,
-            mask: 0xF000,
-            handler: ophandlers::handle0x6XNN,
-        }, // 0x6XNN
-        OpcodeTableEntry {
-            opcode: 0x7000,
-            mask: 0xF000,
-            handler: ophandlers::handle0x7XNN,
-        }, // 0x7XNN
-        OpcodeTableEntry {
-            opcode: 0x8000,
-            mask: 0xF00F,
-            handler: ophandlers::handle0x8XY0,
-        }, // 0x8XY0
-        OpcodeTableEntry {
-            opcode: 0x8001,
-            mask: 0xF00F,
-            handler: ophandlers::handle0x8XY1,
-        }, // 0x8XY1
-        OpcodeTableEntry {
-            opcode: 0x8002,
-            mask: 0xF00F,
-            handler: ophandlers::handle0x8XY2,
-        }, // 0x8XY2
-        OpcodeTableEntry {
-            opcode: 0x8003,
-            mask: 0xF00F,
-            handler: ophandlers::handle0x8XY3,
-        }, // 0x8XY3
-        OpcodeTableEntry {
-            opcode: 0x8004,
-            mask: 0xF00F,
-            handler: ophandlers::handle0x8XY4,
-        }, // 0x8XY4
-        OpcodeTableEntry {
-            opcode: 0x8005,
-            mask: 0xF00F,
-            handler: ophandlers::handle0x8XY5,
-        }, // 0x8XY5
-        OpcodeTableEntry {
-            opcode: 0x8006,
-            mask: 0xF00F,
-            handler: ophandlers::handle0x8XY6,
-        }, // 0x8XY6
-        OpcodeTableEntry {
-            opcode: 0x8007,
-            mask: 0xF00F,
-            handler: ophandlers::handle0x8XY7,
-        }, // 0x8XY7
-        OpcodeTableEntry {
-            opcode: 0x800E,
-            mask: 0xF00F,
-            handler: ophandlers::handle0x8XYE,
-        }, // 0x8XYE
-        OpcodeTableEntry {
-            opcode: 0x9000,
-            mask: 0xF00F,
-            handler: ophandlers::handle0x9XY0,
-        }, // 0x9XY0
-        OpcodeTableEntry {
-            opcode: 0xA000,
-            mask: 0xF000,
-            handler: ophandlers::handle0xANNN,
-        }, // 0xANNN
-        OpcodeTableEntry {
-            opcode: 0xB000,
-            mask: 0xF000,
-            handler: ophandlers::handle0xBNNN,
-        }, // 0xBNNN
-        OpcodeTableEntry {
-            opcode: 0xC000,
-            mask: 0xF000,
-            handler: ophandlers::handle0xCXNN,
-        }, // 0xCXNN
-        OpcodeTableEntry {
-            opcode: 0xD000,
-            mask: 0xF000,
-            handler: ophandlers::handle0xDXYN,
-        }, // 0xDXYN
-        OpcodeTableEntry {
-            opcode: 0xE09E,
-            mask: 0xF0FF,
-            handler: ophandlers::handle0xEX9E,
-        }, // 0xEX9E
-        OpcodeTableEntry {
-            opcode: 0xE001,
-            mask: 0xF00F,
-            handler: ophandlers::handle0xEXA1,
-        }, // 0xEXA1
-        OpcodeTableEntry {
-            opcode: 0xF007,
-            mask: 0xF0FF,
-            handler: ophandlers::handle0xFX07,
-        }, // 0xFX07
-        OpcodeTableEntry {
-            opcode: 0xF00A,
-            mask: 0xF0FF,
-            handler: ophandlers::handle0xFX0A,
-        }, // 0xFX0A
-        OpcodeTableEntry {
-            opcode: 0xF015,
-            mask: 0xF0FF,
-            handler: ophandlers::handle0xFX15,
-        }, // 0xFX15
-        OpcodeTableEntry {
-            opcode: 0xF018,
-            mask: 0xF0FF,
-            handler: ophandlers::handle0xFX18,
-        }, // 0xFX18
-        OpcodeTableEntry {
-            opcode: 0xF01E,
-            mask: 0xF0FF,
-            handler: ophandlers::handle0xFX1E,
-        }, // 0xFX1E
-        OpcodeTableEntry {
-            opcode: 0xF029,
-            mask: 0xF0FF,
-            handler: ophandlers::handle0xFX29,
-        }, // 0xFX29
-        OpcodeTableEntry {
-            opcode: 0xF033,
-            mask: 0xF0FF,
-            handler: ophandlers::handle0xFX33,
-        }, // 0xFX33
-        OpcodeTableEntry {
-            opcode: 0xF055,
-            mask: 0xF0FF,
-            handler: ophandlers::handle0xFX55,
-        }, // 0xFX55
-        OpcodeTableEntry {
-            opcode: 0xF065,
-            mask: 0xF0FF,
-            handler: ophandlers::handle0xFX65,
-        }, // 0xFX65 */
-    ];
-    OPCODE_TABLE
-}
+const OPCODE_TABLE: [OpcodeTableEntry; 35] = [
+    OpcodeTableEntry {
+        opcode: 0x00E0,
+        mask: 0xFFFF,
+        handler: ophandlers::handle0x00E0,
+    }, // 0x00E0
+    OpcodeTableEntry {
+        opcode: 0x00EE,
+        mask: 0xFFFF,
+        handler: ophandlers::handle0x00EE,
+    }, // 0x00EE
+    OpcodeTableEntry {
+        opcode: 0x0000,
+        mask: 0xF000,
+        handler: ophandlers::handle0x0NNN,
+    }, // 0x0NNN
+    OpcodeTableEntry {
+        opcode: 0x1000,
+        mask: 0xF000,
+        handler: ophandlers::handle0x1NNN,
+    }, // 0x1NNN
+    OpcodeTableEntry {
+        opcode: 0x2000,
+        mask: 0xF000,
+        handler: ophandlers::handle0x2NNN,
+    }, // 0x2NNN
+    OpcodeTableEntry {
+        opcode: 0x3000,
+        mask: 0xF000,
+        handler: ophandlers::handle0x3XNN,
+    }, // 0x3XNN
+    OpcodeTableEntry {
+        opcode: 0x4000,
+        mask: 0xF000,
+        handler: ophandlers::handle0x4XNN,
+    }, // 0x4XNN
+    OpcodeTableEntry {
+        opcode: 0x5000,
+        mask: 0xF00F,
+        handler: ophandlers::handle0x5XY0,
+    }, // 0x5XY0
+    OpcodeTableEntry {
+        opcode: 0x6000,
+        mask: 0xF000,
+        handler: ophandlers::handle0x6XNN,
+    }, // 0x6XNN
+    OpcodeTableEntry {
+        opcode: 0x7000,
+        mask: 0xF000,
+        handler: ophandlers::handle0x7XNN,
+    }, // 0x7XNN
+    OpcodeTableEntry {
+        opcode: 0x8000,
+        mask: 0xF00F,
+        handler: ophandlers::handle0x8XY0,
+    }, // 0x8XY0
+    OpcodeTableEntry {
+        opcode: 0x8001,
+        mask: 0xF00F,
+        handler: ophandlers::handle0x8XY1,
+    }, // 0x8XY1
+    OpcodeTableEntry {
+        opcode: 0x8002,
+        mask: 0xF00F,
+        handler: ophandlers::handle0x8XY2,
+    }, // 0x8XY2
+    OpcodeTableEntry {
+        opcode: 0x8003,
+        mask: 0xF00F,
+        handler: ophandlers::handle0x8XY3,
+    }, // 0x8XY3
+    OpcodeTableEntry {
+        opcode: 0x8004,
+        mask: 0xF00F,
+        handler: ophandlers::handle0x8XY4,
+    }, // 0x8XY4
+    OpcodeTableEntry {
+        opcode: 0x8005,
+        mask: 0xF00F,
+        handler: ophandlers::handle0x8XY5,
+    }, // 0x8XY5
+    OpcodeTableEntry {
+        opcode: 0x8006,
+        mask: 0xF00F,
+        handler: ophandlers::handle0x8XY6,
+    }, // 0x8XY6
+    OpcodeTableEntry {
+        opcode: 0x8007,
+        mask: 0xF00F,
+        handler: ophandlers::handle0x8XY7,
+    }, // 0x8XY7
+    OpcodeTableEntry {
+        opcode: 0x800E,
+        mask: 0xF00F,
+        handler: ophandlers::handle0x8XYE,
+    }, // 0x8XYE
+    OpcodeTableEntry {
+        opcode: 0x9000,
+        mask: 0xF00F,
+        handler: ophandlers::handle0x9XY0,
+    }, // 0x9XY0
+    OpcodeTableEntry {
+        opcode: 0xA000,
+        mask: 0xF000,
+        handler: ophandlers::handle0xANNN,
+    }, // 0xANNN
+    OpcodeTableEntry {
+        opcode: 0xB000,
+        mask: 0xF000,
+        handler: ophandlers::handle0xBNNN,
+    }, // 0xBNNN
+    OpcodeTableEntry {
+        opcode: 0xC000,
+        mask: 0xF000,
+        handler: ophandlers::handle0xCXNN,
+    }, // 0xCXNN
+    OpcodeTableEntry {
+        opcode: 0xD000,
+        mask: 0xF000,
+        handler: ophandlers::handle0xDXYN,
+    }, // 0xDXYN
+    OpcodeTableEntry {
+        opcode: 0xE09E,
+        mask: 0xF0FF,
+        handler: ophandlers::handle0xEX9E,
+    }, // 0xEX9E
+    OpcodeTableEntry {
+        opcode: 0xE001,
+        mask: 0xF00F,
+        handler: ophandlers::handle0xEXA1,
+    }, // 0xEXA1
+    OpcodeTableEntry {
+        opcode: 0xF007,
+        mask: 0xF0FF,
+        handler: ophandlers::handle0xFX07,
+    }, // 0xFX07
+    OpcodeTableEntry {
+        opcode: 0xF00A,
+        mask: 0xF0FF,
+        handler: ophandlers::handle0xFX0A,
+    }, // 0xFX0A
+    OpcodeTableEntry {
+        opcode: 0xF015,
+        mask: 0xF0FF,
+        handler: ophandlers::handle0xFX15,
+    }, // 0xFX15
+    OpcodeTableEntry {
+        opcode: 0xF018,
+        mask: 0xF0FF,
+        handler: ophandlers::handle0xFX18,
+    }, // 0xFX18
+    OpcodeTableEntry {
+        opcode: 0xF01E,
+        mask: 0xF0FF,
+        handler: ophandlers::handle0xFX1E,
+    }, // 0xFX1E
+    OpcodeTableEntry {
+        opcode: 0xF029,
+        mask: 0xF0FF,
+        handler: ophandlers::handle0xFX29,
+    }, // 0xFX29
+    OpcodeTableEntry {
+        opcode: 0xF033,
+        mask: 0xF0FF,
+        handler: ophandlers::handle0xFX33,
+    }, // 0xFX33
+    OpcodeTableEntry {
+        opcode: 0xF055,
+        mask: 0xF0FF,
+        handler: ophandlers::handle0xFX55,
+    }, // 0xFX55
+    OpcodeTableEntry {
+        opcode: 0xF065,
+        mask: 0xF0FF,
+        handler: ophandlers::handle0xFX65,
+    }, // 0xFX65 */
+];
 
 impl TryFrom<u16> for InstructionV2 {
     type Error = String;
     fn try_from(opcode: u16) -> Result<Self, String> {
-        let opcode_table = initialize_opcode_table();
         let ins: InstructionV2;
-        for opcode_entry in opcode_table.iter() {
+        for opcode_entry in OPCODE_TABLE.iter() {
             if opcode != 0 && (opcode & opcode_entry.mask == opcode_entry.opcode) {
                 // debug!("input opcode = {:X}, mask = {:X}, actual code: {:X}", opcode, opcode_entry.mask, opcode_entry.opcode);
                 ins = (opcode_entry.handler)(opcode);
