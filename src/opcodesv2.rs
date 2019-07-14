@@ -5,7 +5,7 @@ type Address = u16;
 type Register = u8;
 type Data = u8;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum InstructionV2 {
     ClearScreen,                              // 00E0 - CLS
     Return,                                   // 00EE - RET
@@ -240,5 +240,113 @@ impl TryFrom<u16> for InstructionV2 {
             }
         }
         Err(format!("Opcode not found: {:X}", opcode))
+    }
+}
+
+use crate::bitmasks::*;
+#[cfg(test)]
+use std::collections::HashMap;
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_opcode_table_simple() {
+        let mut opcode_hash: HashMap<u16, InstructionV2> = HashMap::new();
+
+        opcode_hash.insert(0x00E0, InstructionV2::ClearScreen);
+        opcode_hash.insert(0x00EE, InstructionV2::Return);
+        opcode_hash.insert(0x06B5, InstructionV2::SYS);
+        opcode_hash.insert(0x16B5, InstructionV2::Jump(mask_0FFF(0x16B5)));
+        opcode_hash.insert(0x26B5, InstructionV2::Call(mask_0FFF(0x26B5)));
+        opcode_hash.insert(
+            0x3D6B,
+            InstructionV2::SkipEqualsByte(mask_0F00(0x3D6B), mask_00FF(0x3D6B)),
+        );
+        opcode_hash.insert(
+            0x4D6B,
+            InstructionV2::SkipNotEqualsByte(mask_0F00(0x4D6B), mask_00FF(0x4D6B)),
+        );
+        opcode_hash.insert(
+            0x5DB0,
+            InstructionV2::SkipEqualsRegister(mask_0F00(0x5DB0), mask_00F0(0x5DB0)),
+        );
+        opcode_hash.insert(
+            0x6D6B,
+            InstructionV2::LoadByte(mask_0F00(0x6D6B), mask_00FF(0x6D6B)),
+        );
+        opcode_hash.insert(
+            0x7D6B,
+            InstructionV2::AddByte(mask_0F00(0x7D6B), mask_00FF(0x7D6B)),
+        );
+        opcode_hash.insert(
+            0x8DB0,
+            InstructionV2::LoadRegister(mask_0F00(0x8DB0), mask_00F0(0x8DB0)),
+        );
+        opcode_hash.insert(
+            0x8DB1,
+            InstructionV2::Or(mask_0F00(0x8DB1), mask_00F0(0x8DB1)),
+        );
+        opcode_hash.insert(
+            0x8DB2,
+            InstructionV2::And(mask_0F00(0x8DB2), mask_00F0(0x8DB2)),
+        );
+        opcode_hash.insert(
+            0x8DB3,
+            InstructionV2::Xor(mask_0F00(0x8DB3), mask_00F0(0x8DB3)),
+        );
+        opcode_hash.insert(
+            0x8DB4,
+            InstructionV2::AddRegister(mask_0F00(0x8DB4), mask_00F0(0x8DB4)),
+        );
+        opcode_hash.insert(
+            0x8DB5,
+            InstructionV2::SubRegister(mask_0F00(0x8DB5), mask_00F0(0x8DB5)),
+        );
+        opcode_hash.insert(0x8DB6, InstructionV2::ShiftRight(mask_0F00(0x8DB6)));
+        opcode_hash.insert(
+            0x8DB7,
+            InstructionV2::SubNRegister(mask_0F00(0x8DB7), mask_00F0(0x8DB7)),
+        );
+        opcode_hash.insert(0x8DBE, InstructionV2::ShiftLeft(mask_0F00(0x8DBE)));
+        opcode_hash.insert(
+            0x9DB0,
+            InstructionV2::SkipNotEqualRegister(mask_0F00(0x9DB0), mask_00F0(0x9DB0)),
+        );
+        opcode_hash.insert(0xA6B5, InstructionV2::LoadImmediate(mask_0FFF(0xA6B5)));
+        opcode_hash.insert(0xB6B5, InstructionV2::JumpBase(mask_0FFF(0xB6B5)));
+        opcode_hash.insert(
+            0xCD6B,
+            InstructionV2::Random(mask_0F00(0xCD6B), mask_00FF(0xCD6B)),
+        );
+        opcode_hash.insert(
+            0xDDB5,
+            InstructionV2::DisplaySprite(mask_0F00(0xDDB5), mask_00F0(0xDDB5), mask_000F(0xDDB5)),
+        );
+        opcode_hash.insert(0xED9E, InstructionV2::SkipKeyPress(mask_0F00(0xED9E)));
+        opcode_hash.insert(0xEDA1, InstructionV2::SkipNotKeyPress(mask_0F00(0xED9E)));
+        opcode_hash.insert(0xFD07, InstructionV2::LoadFromDelay(mask_0F00(0xFD07)));
+        opcode_hash.insert(0xFD0A, InstructionV2::LoadKeyPress(mask_0F00(0xFD0A)));
+        opcode_hash.insert(0xFD15, InstructionV2::LoadDelay(mask_0F00(0xFD0A)));
+        opcode_hash.insert(0xFD18, InstructionV2::LoadSound(mask_0F00(0xFD18)));
+        opcode_hash.insert(0xFD1E, InstructionV2::AddI(mask_0F00(0xFD1E)));
+        opcode_hash.insert(0xFD29, InstructionV2::LoadFontSprite(mask_0F00(0xFD1E)));
+        opcode_hash.insert(0xFD33, InstructionV2::LoadIBCD(mask_0F00(0xFD33)));
+        opcode_hash.insert(0xFD55, InstructionV2::StoreRegisters(mask_0F00(0xFD55)));
+        opcode_hash.insert(0xFD65, InstructionV2::LoadRegisters(mask_0F00(0xFD55)));
+        for (k, v) in opcode_hash.iter() {
+            assert_eq!(*v, InstructionV2::try_from(*k).unwrap());
+        }
+    }
+
+    #[test]
+    fn test_bad_opcodes() {
+        // Some negative tests for opcode construction
+        let opcode = 0xFC14;
+        let instruction = InstructionV2::try_from(opcode);
+        assert_eq!(instruction, Err(format!("Opcode not found: {:X}", opcode)));
+
+        let opcode = 0xEB8E;
+        let instruction = InstructionV2::try_from(opcode);
+        assert_eq!(instruction, Err(format!("Opcode not found: {:X}", opcode)));
     }
 }
